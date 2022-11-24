@@ -6,15 +6,17 @@ import Upload from './components/Upload';
 
 export const ImageContext = React.createContext()
 
+
 function App() {
   const [image,setImage] = React.useState()
   const [isLoading,setIsLoading] = React.useState(false)
   const[url,setUrl] = React.useState('')
 
   const changeImage = (payload) => {
-    setImage(payload ?? null)
+    if(payload && typeof payload == "object") setImage(payload ?? null) 
+    if(payload && payload?.target?.files && payload?.target?.files.length > 0)  setImage(payload.target.files[0] ?? null) 
   }
-
+  
   React.useEffect(()=>{
     console.log(image,'image')
     console.log(isLoading,url)
@@ -23,15 +25,15 @@ function App() {
   React.useEffect(()=>{
     const postImage = async(image) => {
       setIsLoading(true)
-      const imageFile = image.target.files
       const formData = new FormData();
-      formData.append("image", imageFile[0]);
-      if(imageFile.length > 0) await axios.post(process.env.REACT_APP_UPLOAD_IMAGE,formData).then((res => setUrl(res.data))).catch(err => console.log(err))
+      formData.append("image", image);
+      console.log(formData,'dataa')
+      await axios.post(process.env.REACT_APP_UPLOAD_IMAGE,formData).then((res => setUrl(res.data))).catch(err => console.log(err))
       setIsLoading(false)
    }
    if(image) postImage(image)
   },[image])
-
+  
   return (
     <ImageContext.Provider value={{"image":image,"changeImage":changeImage}}>
       <div className="relative w-402 h-screen m-auto flex flex-col justify-center">
@@ -41,4 +43,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

@@ -10,7 +10,7 @@ const Success = ({src}) => {
 
     React.useEffect(() =>{
         const image = imageContext.image
-        const url = URL.createObjectURL(image.target.files[0])
+        const url = URL.createObjectURL(image)
         setPerview(url)
     },[])
 
@@ -29,7 +29,7 @@ const Success = ({src}) => {
                     setCopied(true)
                     setTimeout(()=>{
                         setCopied(false)
-                    },4000)
+                    },1000)
                 }}>Copy Link</button>
             </div>
         </div>
